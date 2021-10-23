@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using DependencyInjection.Entities;
 
 namespace DependencyInjection.Interfaces
@@ -14,24 +13,15 @@ namespace DependencyInjection.Interfaces
 
         protected object[] FillConstructorInfo<T>(List<CustomConstructorInfo> customInfo)
         {
-            if (customInfo is null)
-            {
-                return Array.Empty<object>();
-            }
+            if (customInfo is null) return Array.Empty<object>();
             var constructor = typeof(T).GetConstructors().First();
             var parameterInfo = constructor.GetParameters();
 
-            if (parameterInfo.Length == 0)
-            {
-                return Array.Empty<object>();
-            }
+            if (parameterInfo.Length == 0) return Array.Empty<object>();
             var parameterList = new object[parameterInfo.Length];
             for (var i = 0; i < parameterInfo.Length; i++)
             {
-                var matches = customInfo.Where(x =>
-                {
-                    return (x.ParamName == parameterInfo[0].Name);
-                }).ToList();
+                var matches = customInfo.Where(x => { return x.ParamName == parameterInfo[0].Name; }).ToList();
                 if (matches.Count == 1)
                 {
                     parameterList[i] = matches[0].ParamValue;

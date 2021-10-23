@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using DependencyInjection.Interfaces;
 
 namespace DependencyInjection.Entities
 {
     internal class Singleton<T> : IDependency
     {
+        private readonly List<CustomConstructorInfo> _info;
         private object _singleTon;
+        private readonly bool IsInstancd;
         private object[] ParamInfo;
-        private bool IsInstancd = false;
-        private List<CustomConstructorInfo> _info;
+
         public Singleton(List<CustomConstructorInfo> info)
         {
             _info = info;
@@ -22,6 +21,7 @@ namespace DependencyInjection.Entities
             _singleTon = reference;
             IsInstancd = true;
         }
+
         public override bool IsSingleton()
         {
             return true;
@@ -32,8 +32,9 @@ namespace DependencyInjection.Entities
             if (!IsInstancd)
             {
                 ParamInfo = FillConstructorInfo<T>(_info);
-                _singleTon = Activator.CreateInstance(typeof(T),ParamInfo);
+                _singleTon = Activator.CreateInstance(typeof(T), ParamInfo);
             }
+
             return _singleTon;
         }
     }
